@@ -1,0 +1,41 @@
+---
+- name: download Zookeeper
+  get_url: url=http://apache-mirror.rbc.ru/pub/apache/zookeeper/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz dest={{ zookeeper_distr_destination }}
+
+- name: unarchive Zookeeper 
+  unarchive: remote_src=yes src={{ zookeeper_distr_destination }}/zookeeper-{{ zookeeper_version }}.tar.gz dest={{ zookeeper_unarchive_prefix }} 
+
+- name: create /etc/zookeeper
+  file: state=directory path=/etc/zookeeper owner=root group=root mode=0700
+
+- name: create bin dir 
+  file: state=directory path={{ zookeeper_root_dir }}/bin owner=root group=root mode=0700
+
+- name: create conf dir
+  file: state=directory path={{ zookeeper_root_dir }}/conf owner=root group=root mode=0700
+
+- name: add Zookeeper user 
+  user: name={{ zookeeper_user }} shell=/usr/sbin/nologin
+
+- name: put {{ zookeeper_root_dir }}/conf/zoo.cfg
+  template: src=zookeeper/zoo.cfg.j2 dest={{ zookeeper_root_dir }}/conf/zoo.cfg owner=root group=root mode=0644
+
+- name: put {{ zookeeper_root_dir }}/conf/zookeeper-env.sh
+template: src=zookeeper/zookeeper-env.sh.j2 dest={{ zookeeper_root_dir }}/conf/zookeeper-env.sh owner=root group=root mode=0644
+
+- name: put {{ zookeeper_var_prefix }}/myid
+  template: src=zookeeper/myid.j2 dest={{ zookeeper_var_prefix }}/myid owner=root group=root mode=0644
+
+- name: put systemd unit 
+  template: src=zookeeper.service.j2 dest=/etc/systemd/system/zookeeper.service owner=root group=root mode=0644
+  notify: systemctl daemon-reload
+
+- name: start and enable zookeeper service
+  service: name=zookeeper state=restarted enabled=yes
+
+
+
+
+
+
+

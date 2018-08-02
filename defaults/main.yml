@@ -1,0 +1,17 @@
+---
+zookeeper_version: 3.4.13
+zookeeper_distr_destination: /tmp/
+zookeeper_unarchive_prefix: /opt/
+zookeeper_root_dir: /etc/zookeeper
+zookeeper_user: zookeeper
+zookeeper_var_prefix: /var/zookeeper
+zookeeper_client_port: 2181
+zookeeper_max_client_cnxns: 500
+zookeeper_server_1:
+zookeeper_server_2:
+zookeeper_server_3:
+zookeeper_peerport: 2888
+zookeeper_leaderport: 3888
+zookeeper_log_prefix: /var/log/zookeeper
+## paste var in hosts
+zookeeper_id:
